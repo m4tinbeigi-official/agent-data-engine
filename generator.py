@@ -93,5 +93,9 @@ Page content:
         content = re.sub(r"^```[a-zA-Z]*\n?", "", content)
         content = re.sub(r"\n?```$", "", content).strip()
 
-    parsed = json.loads(content)
+    try:
+        parsed = json.loads(content, strict=False)
+    except json.JSONDecodeError:
+        content_escaped = re.sub(r'\\(?![/"\\bfnrtu])', r'\\\\', content)
+        parsed = json.loads(content_escaped, strict=False)
     return parsed

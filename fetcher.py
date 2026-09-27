@@ -11,16 +11,16 @@ HEADERS = {
 }
 
 def fetch_url(url: str, timeout: float = 15.0) -> str:
-    # Try direct first
+    # verify=False is strictly used for read-only public web data extraction across Iranian domestic CAs
     try:
-        with httpx.Client(headers=HEADERS, follow_redirects=True, timeout=timeout) as client:
+        with httpx.Client(headers=HEADERS, follow_redirects=True, timeout=timeout, verify=False) as client:
             resp = client.get(url)
             resp.raise_for_status()
             return resp.text
     except Exception as e:
         # Fallback to local SOCKS5 proxy if direct fails
         try:
-            with httpx.Client(headers=HEADERS, proxy="socks5://127.0.0.1:10808", follow_redirects=True, timeout=timeout) as client:
+            with httpx.Client(headers=HEADERS, proxy="socks5://127.0.0.1:10808", follow_redirects=True, timeout=timeout, verify=False) as client:
                 resp = client.get(url)
                 resp.raise_for_status()
                 return resp.text
