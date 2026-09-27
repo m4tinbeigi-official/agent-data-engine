@@ -10,7 +10,12 @@ Turns any website into a live, structured JSON API in seconds using LLM synthesi
 - **On-demand API Synthesis (`parse`)**: Give any URL and task description. The engine visits the page, inspects DOM/JSON structures, synthesizes a robust Python extractor, verifies it on live data, and saves the endpoint.
 - **Direct Live Extraction (`call`)**: Pull structured JSON without sending raw HTML or taking screenshots. Saves 80%+ tokens for agent workflows.
 - **Embedded Catalog**: SQLite + FTS5 full-text search for instantly discovering existing APIs.
-- **Built-in Endpoints (16 Live Endpoints)**:
+- **Built-in Endpoints (21 Live Endpoints)**:
+  - `digikala-mobile-phone-search`: Live product listings, prices (IRR), ratings, and links from Digikala.
+  - `torob-product-search`: Price comparison across hundreds of Iranian online stores from Torob.
+  - `divar-tehran-laptops`: Real-time classified ads, prices, condition, and locations from Divar.
+  - `balad-ir-tehran-coffee-shops`: Real-world commercial venues, addresses, and phone numbers from Balad Map.
+  - `mrbilit-train-availability`: Real-time intercity train schedules, class seats, and prices from MrBilit.
   - `nobitex-market-stats-rls`: Live Nobitex crypto prices in Rials (BTC, ETH, USDT latest, high, low, change).
   - `taline-ir-gold-rates`: Live 18K gold buy/sell rates in Tomans from Taline.
   - `milli-gold-18k-price`: Live 18K gold price from Milli Gold.
@@ -18,7 +23,7 @@ Turns any website into a live, structured JSON API in seconds using LLM synthesi
   - `selva-ir-domain-registration-price`: Live `.ir` domain registration fee from Selva.
   - `zoomit-top-tech-news`: Latest tech news headlines and links from Zoomit.
   - `mrhermes-ir-blog-posts`: Latest AI agent and tech engineering articles from MrHermes.
-  - `binance-crypto-ticker-prices`: Live BTC, ETH, SOL ticker rates.
+  - `binance-crypto-ticker-prices`: Live BTC, ETH, SOL ticker rates from Binance.
   - `wttr-in-tehran-weather`: Real-time weather data for Tehran (temp, feels like, humidity, wind).
   - `ipinfo-geolocation-details`: Public IP, ISP, ASN, and geo-coordinates.
   - `github-trending-repositories`: Daily trending open-source projects on GitHub.

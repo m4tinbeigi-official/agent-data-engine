@@ -8,24 +8,49 @@ HEADERS = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
     "Accept-Language": "en-US,en;q=0.9,fa;q=0.8",
     "Cache-Control": "no-cache",
+    "Cookie": "__zrkjc=1790489984_795af8d60f6902ca50ec313904ec0b3c;",
 }
 
+def is_bot_challenge(text: str) -> bool:
+    indicators = [
+        "در حال بررسی مرورگر شما",
+        "آیا شما یک ربات هستید",
+        "captcha-box",
+        "g-recaptcha",
+        "cf-turnstile",
+    ]
+    return any(ind in text for ind in indicators)
+
 def fetch_url(url: str, timeout: float = 15.0) -> str:
-    # verify=False is strictly used for read-only public web data extraction across Iranian domestic CAs
+    # 1. Try httpx direct
     try:
         with httpx.Client(headers=HEADERS, follow_redirects=True, timeout=timeout, verify=False) as client:
+            resp = client.get(url)
+            if resp.status_code == 200 and not is_bot_challenge(resp.text):
+                return resp.text
+    except Exception:
+        pass
+
+    # 2. Try curl direct (handles TLS fingerprinting & Sotoon/Arvan cookies cleanly)
+    try:
+        import subprocess
+        cookie_arg = "__zrkjc=1790489984_795af8d60f6902ca50ec313904ec0b3c;"
+        cmd = ["curl", "-s", "-k", "-L", "--max-time", str(int(timeout)), "-A", HEADERS["User-Agent"], "-b", cookie_arg, url]
+        out = subprocess.check_output(cmd, stderr=subprocess.DEVNULL)
+        text = out.decode("utf-8", errors="ignore")
+        if len(text) > 50 and not is_bot_challenge(text):
+            return text
+    except Exception:
+        pass
+
+    # 3. Fallback to local SOCKS5 proxy if direct triggers bot challenge or fails
+    try:
+        with httpx.Client(headers=HEADERS, proxy="socks5://127.0.0.1:10808", follow_redirects=True, timeout=timeout, verify=False) as client:
             resp = client.get(url)
             resp.raise_for_status()
             return resp.text
     except Exception as e:
-        # Fallback to local SOCKS5 proxy if direct fails
-        try:
-            with httpx.Client(headers=HEADERS, proxy="socks5://127.0.0.1:10808", follow_redirects=True, timeout=timeout, verify=False) as client:
-                resp = client.get(url)
-                resp.raise_for_status()
-                return resp.text
-        except Exception:
-            raise e
+        raise e
 
 def clean_html_for_llm(html: str, max_chars: int = 40000) -> str:
     soup = BeautifulSoup(html, "html.parser")
