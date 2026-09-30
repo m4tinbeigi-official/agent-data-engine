@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://devsponsors.github.io">
+    <img src="https://devsponsors.github.io/assets/badges/sponsor.svg" alt="DevSponsors Badge">
+  </a>
+</p>
+
 # agent-data-engine
 
 Self-hosted, token-efficient, real-time structured data engine for AI agents.
